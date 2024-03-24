@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -53,6 +54,8 @@ func GetBook(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateBook(w http.ResponseWriter, r *http.Request) {
+	startTime := time.Now()
+
 	var book Book
 	json.NewDecoder(r.Body).Decode(&book)
 	for _, item := range books {
@@ -63,7 +66,10 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	books = append(books, book)
+	duration := time.Since(startTime)
 	json.NewEncoder(w).Encode(book)
+
+	fmt.Printf("Response time: %s\n", duration)
 
 }
 
